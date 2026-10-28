@@ -1,0 +1,7 @@
+# Reference configuration for the passing sample.
+baseline: 0.7
+threshold: 0.8
+prompt_version: v1
+retention_days: 30
+latency_budget_ms: 2000
+timeout_seconds: 30
