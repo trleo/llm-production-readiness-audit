@@ -7,6 +7,7 @@ never content. Ignored directories are never descended into.
 
 from __future__ import annotations
 
+import fnmatch
 import os
 from dataclasses import dataclass, field
 
@@ -39,10 +40,15 @@ def _is_text_file(path: str) -> bool:
         return False
 
 
-def scan_project(path: str) -> ScanResult:
-    """Scan *path* and return its files and eligible text content."""
+def scan_project(path: str, exclude=None) -> ScanResult:
+    """Scan *path* and return its files and eligible text content.
+
+    *exclude* is an optional list of glob patterns; a file is skipped
+    if any pattern matches its relative path or its basename.
+    """
     if not os.path.isdir(path):
         raise FileNotFoundError(f"Directory not found: {path}")
+    exclude = list(exclude or [])
 
     result = ScanResult()
     for root, dirs, names in os.walk(path):
@@ -50,6 +56,11 @@ def scan_project(path: str) -> ScanResult:
         for name in sorted(names):
             full = os.path.join(root, name)
             rel = os.path.relpath(full, path).replace(os.sep, "/")
+            if any(
+                fnmatch.fnmatch(rel, pattern) or fnmatch.fnmatch(name, pattern)
+                for pattern in exclude
+            ):
+                continue
             result.files.append(rel)
             try:
                 size = os.path.getsize(full)
