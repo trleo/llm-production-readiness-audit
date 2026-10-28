@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 
+from . import __version__
 from .checks import CHECK_IDS, run_checks
 from .report import render_json, render_markdown, score_results
 from .scanner import scan_project
@@ -21,6 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
                         help="Directory for report.json and report.md (default: readiness-report)")
     parser.add_argument("--list-checks", action="store_true",
                         help="List check ids and exit")
+    parser.add_argument("--version", action="version", version=__version__)
     return parser
 
 
