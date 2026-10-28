@@ -41,6 +41,11 @@ class TestCli(unittest.TestCase):
             self.assertEqual(data["score"], 100.0)
             self.assertEqual(data["verdict"], "GO")
 
+    def test_version_flag(self):
+        proc = run_cli("--version")
+        self.assertEqual(proc.returncode, 0)
+        self.assertEqual(proc.stdout.strip(), "0.1.0")
+
     def test_missing_path_exits_2(self):
         with tempfile.TemporaryDirectory() as tmp:
             proc = run_cli("--path", str(Path(tmp) / "nope"), "--out", tmp)
