@@ -35,6 +35,16 @@ class TestScanner(unittest.TestCase):
             self.assertIn("big.txt", result.files)
             self.assertNotIn("big.txt", result.texts)
 
+    def test_exclude_pattern_skips_matching_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "keep.py").write_text("token cost", encoding="utf-8")
+            (root / "skip.txt").write_text("token cost", encoding="utf-8")
+            result = scan_project(tmp, exclude=["*.txt"])
+            self.assertIn("keep.py", result.files)
+            self.assertNotIn("skip.txt", result.files)
+            self.assertNotIn("skip.txt", result.texts)
+
     def test_missing_directory_raises(self):
         with self.assertRaises(FileNotFoundError):
             scan_project("/definitely/not/a/real/dir-xyz")

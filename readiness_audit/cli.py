@@ -23,6 +23,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--list-checks", action="store_true",
                         help="List check ids and exit")
     parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument("--exclude", action="append", default=None,
+                        help="Glob pattern to exclude from scanning (repeatable)")
     return parser
 
 
@@ -39,7 +41,7 @@ def main(argv=None) -> int:
         return 2
 
     try:
-        scan = scan_project(args.path)
+        scan = scan_project(args.path, exclude=args.exclude)
     except FileNotFoundError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
