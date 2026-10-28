@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-production-readiness-audit"
+version = "0.1.0"
+description = "Deterministic, offline audit of LLM projects for production readiness"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.scripts]
+readiness-audit = "readiness_audit.cli:main"
+
+[tool.setuptools]
+packages = ["readiness_audit"]
